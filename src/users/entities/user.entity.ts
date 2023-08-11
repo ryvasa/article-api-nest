@@ -10,7 +10,11 @@ export class User {
   @ApiProperty()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   @ApiProperty()
   email: string;
+
+  @Column('text')
+  @ApiProperty()
+  password: string;
 }
