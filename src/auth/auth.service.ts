@@ -62,8 +62,10 @@ export class AuthService {
     const createUserDto: CreateUserDto = {
       name: data.displayName,
       email: data.emails[0].value,
-      authId: auth.id,
+      auth,
     };
-    return await this.usersService.createUserByOauth(createUserDto);
+    const user = await this.usersService.createUserByOauth(createUserDto);
+    const { password, ...others } = user;
+    return others;
   }
 }

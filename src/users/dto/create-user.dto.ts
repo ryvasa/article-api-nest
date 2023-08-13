@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import { IsAlphanumeric, MaxLength, MinLength } from 'class-validator';
+import { CreateAuthDto } from 'src/auth/dto/create-auth.dto';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -16,5 +18,7 @@ export class CreateUserDto {
   password?: string;
 
   @ApiProperty()
-  authId?: number;
+  @Type(() => CreateAuthDto)
+  @Expose()
+  auth?: CreateAuthDto;
 }

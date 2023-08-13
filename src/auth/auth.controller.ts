@@ -13,11 +13,15 @@ import { AuthenticatedGuard } from './authenticated.guard';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { GoogleAuthGuard } from './utils/google/google-auth.guard';
 import { LocalAuthGuard } from './utils/local/local-auth.guard';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UsersService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -45,7 +49,18 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  handleRedirect() {
-    return { msg: 'OK' };
+  handleRedirect(@Request() req) {
+    return req.user;
   }
+  // @Get('google/redirect')
+  // @UseGuards(GoogleAuthGuard)
+  // async handleRedirect(
+  //   @Request() req,
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() updateUserDto: UpdateUserDto,
+  // ) {
+  //   console.log(req.user);
+
+  //   return await this.userService.update(+id, updateUserDto);
+  // }
 }
