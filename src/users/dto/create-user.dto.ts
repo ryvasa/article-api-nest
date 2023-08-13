@@ -13,5 +13,8 @@ export class CreateUserDto {
 
   @ApiProperty()
   @MinLength(8)
-  password: string;
+  password?: string;
+
+  @ApiProperty()
+  authId?: number;
 }

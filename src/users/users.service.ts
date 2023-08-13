@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Injectable,
@@ -18,7 +19,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const user: User = await this.findOneByEmail(createUserDto.email);
     if (user !== null) {
-      throw new BadRequestException();
+      throw new BadRequestException('Email already in use');
     }
     createUserDto.password = bcrypt.hashSync(createUserDto.password, 10);
 
@@ -54,12 +55,16 @@ export class UsersService {
 
   async remove(id: number): Promise<User> {
     const user = await this.findOne(id);
-
     return this.userRepository.remove(user);
   }
 
   async findOneByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOneBy({ email });
+    return await this.userRepository.findOneBy({ email });
+  }
+
+  async createUserByOauth(createUserDto: CreateUserDto) {
+    const user = await this.userRepository.create(createUserDto);
+    await this.userRepository.save(user);
     return user;
   }
 }

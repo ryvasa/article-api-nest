@@ -9,6 +9,10 @@ import { createClient } from 'redis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    credentials: true,
+  });
 
   const redisClient = createClient();
   redisClient
@@ -27,7 +31,7 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: 'keyboard cat',
+      secret: process.env.SECRETE,
       resave: false,
       saveUninitialized: false,
       cookie: { maxAge: 3600000 },
