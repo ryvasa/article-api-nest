@@ -52,15 +52,4 @@ export class AuthController {
   handleRedirect(@Request() req) {
     return req.user;
   }
-  // @Get('google/redirect')
-  // @UseGuards(GoogleAuthGuard)
-  // async handleRedirect(
-  //   @Request() req,
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() updateUserDto: UpdateUserDto,
-  // ) {
-  //   console.log(req.user);
-
-  //   return await this.userService.update(+id, updateUserDto);
-  // }
 }

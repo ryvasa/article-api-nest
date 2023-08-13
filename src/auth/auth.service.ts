@@ -56,16 +56,16 @@ export class AuthService {
       googleId: data.id,
     };
 
-    const auth = this.authRepository.create(createAuthDto);
-    await this.authRepository.save(auth);
+    const newAuth = this.authRepository.create(createAuthDto);
+    await this.authRepository.save(newAuth);
 
     const createUserDto: CreateUserDto = {
       name: data.displayName,
       email: data.emails[0].value,
-      auth,
+      auth: newAuth,
     };
     const user = await this.usersService.createUserByOauth(createUserDto);
-    const { password, ...others } = user;
+    const { password, auth, ...others } = user;
     return others;
   }
 }
