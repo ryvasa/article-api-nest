@@ -8,6 +8,7 @@ import { GoogleStrategy } from './utils/google/google.strategy';
 import { LocalStrategy } from './utils/local/local.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
+import { FacebookStrategy } from './utils/facebook/facebook.strategy';
 
 @Module({
   imports: [
@@ -15,7 +16,13 @@ import { Auth } from './entities/auth.entity';
     UsersModule,
     PassportModule.register({ session: true }),
   ],
-  providers: [AuthService, LocalStrategy, GoogleStrategy, SessionSerializer],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    GoogleStrategy,
+    FacebookStrategy,
+    SessionSerializer,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

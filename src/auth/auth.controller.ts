@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -14,6 +15,7 @@ import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { GoogleAuthGuard } from './utils/google/google-auth.guard';
 import { LocalAuthGuard } from './utils/local/local-auth.guard';
 import { UsersService } from 'src/users/users.service';
+import { FacebookAuthGuard } from './utils/facebook/facebook-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -49,7 +51,19 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  handleRedirect(@Request() req) {
+  googleRedirect(@Res() res) {
+    return res.redirect('http://localhost:5173/');
+  }
+
+  @Get('facebook')
+  @UseGuards(FacebookAuthGuard)
+  facebookHandler() {
+    return { msg: 'facebook auth' };
+  }
+
+  @Get('facebook/redirect')
+  @UseGuards(FacebookAuthGuard)
+  facebookRedirect(@Request() req) {
     return req.user;
   }
 }

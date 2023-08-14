@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { responseFormat } from 'src/utils/responseFormat';
@@ -20,6 +24,9 @@ export class AuthService {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException('Email not found');
+    }
+    if (!user.password) {
+      throw new BadRequestException('Wrong password');
     }
     const isMatch = await bcrypt.compare(password, user.password);
 
