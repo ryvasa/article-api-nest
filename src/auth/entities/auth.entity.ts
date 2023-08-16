@@ -15,6 +15,8 @@ export class Auth {
   @ApiProperty()
   facebaookId?: string;
 
-  @OneToOne(() => User, (user) => user.auth)
+  @OneToOne(() => User, (user) => user.auth, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 }

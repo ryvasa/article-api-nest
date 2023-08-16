@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { ImageHandler } from 'src/utils/imageHandle';
 
 @Injectable()
 export class UsersService {
@@ -44,17 +45,43 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException();
     }
-    return user;
+    const { password, ...otherData } = user;
+
+    return otherData;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    file: any,
+    req: any,
+  ): Promise<User> {
     const user = await this.findOne(id);
 
-    return this.userRepository.save({ ...user, ...updateUserDto });
+    if (file && user.photo) {
+      new ImageHandler().deleteImage(user.photo);
+      updateUserDto.photo = null;
+    }
+
+    if (file) {
+      const address = new ImageHandler().uploadImage(req, file);
+      updateUserDto.photo = address;
+    }
+
+    const updatedUser = await this.userRepository.save({
+      ...user,
+      ...updateUserDto,
+    });
+
+    const { password, ...otherData } = updatedUser;
+    return otherData;
   }
 
   async remove(id: number): Promise<User> {
     const user = await this.findOne(id);
+    if (user.photo) {
+      new ImageHandler().deleteImage(user.photo);
+    }
     return this.userRepository.remove(user);
   }
 

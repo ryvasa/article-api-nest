@@ -23,7 +23,11 @@ export class User {
 
   @Column('text', { nullable: true })
   @ApiProperty()
-  password: string;
+  password?: string;
+
+  @Column('text', { nullable: true })
+  @ApiProperty()
+  photo: string;
 
   @OneToOne(() => Auth, (auth) => auth.id, {
     onDelete: 'CASCADE',

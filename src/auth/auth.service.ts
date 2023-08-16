@@ -70,6 +70,7 @@ export class AuthService {
       name: data.displayName,
       email: data.emails[0].value,
       auth: newAuth,
+      photo: data.photos[0].value,
     };
     const user = await this.usersService.createUserByOauth(createUserDto);
     const { password, auth, ...others } = user;

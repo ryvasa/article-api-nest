@@ -6,7 +6,9 @@ import {
   Post,
   Request,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,6 +18,8 @@ import { GoogleAuthGuard } from './utils/google/google-auth.guard';
 import { LocalAuthGuard } from './utils/local/local-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { FacebookAuthGuard } from './utils/facebook/facebook-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { createWriteStream } from 'fs';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,6 +28,13 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UsersService,
   ) {}
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file) {
+    const ws = createWriteStream(`uploads/${file.originalname}`);
+    ws.write(file.buffer);
+  }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
